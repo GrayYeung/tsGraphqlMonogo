@@ -3,8 +3,9 @@ import { createConnection } from "typeorm";
 import express from "express";
 import { ApolloServer } from "apollo-server-express";
 import { buildSchema } from "type-graphql";
-import { HelloWorldResolver } from "./resolvers/HelloWorldResolver";
-import { MovieResolver } from "./resolvers/MovieResolver";
+import {UserResolver} from "./resolvers/UserResolver";
+import {CommentResolver} from "./resolvers/CommentResolver";
+
 
 (async () => {
   const app = express();
@@ -13,7 +14,7 @@ import { MovieResolver } from "./resolvers/MovieResolver";
 
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
-      resolvers: [HelloWorldResolver, MovieResolver]
+      resolvers: [UserResolver, CommentResolver] // TODO
     }),
     context: ({ req, res }) => ({ req, res })
   });
@@ -21,6 +22,6 @@ import { MovieResolver } from "./resolvers/MovieResolver";
   apolloServer.applyMiddleware({ app, cors: false });
 
   app.listen(4000, () => {
-    console.log("express server started");
+    console.log("express server $port 4000 started");
   });
 })();

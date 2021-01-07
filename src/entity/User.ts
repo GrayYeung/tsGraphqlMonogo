@@ -1,16 +1,26 @@
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
+import {BaseEntity, Column, Entity, PrimaryGeneratedColumn} from "typeorm";
+import {Field, Int, ObjectType} from "type-graphql";
 
+
+@ObjectType()
 @Entity()
-export class User {
-  @PrimaryGeneratedColumn()
-  id: number;
+export class User extends BaseEntity {
+    @Field( () => Int)
+    @PrimaryGeneratedColumn()
+    id: number
 
-  @Column()
-  firstName: string;
+    @Field()
+    @Column()
+    name: string
 
-  @Column()
-  lastName: string;
+    @Field()
+    @Column()
+    avatar: string
 
-  @Column()
-  age: number;
+    // @Field( () => [Comment], {nullable: true})
+    // @OneToMany( () => Comment, (comment: Comment) => comment.author, {
+    //     onDelete: "CASCADE", onUpdate: "CASCADE"
+    // })
+    // comments: Array<Comment>
+
 }
