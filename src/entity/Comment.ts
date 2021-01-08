@@ -1,5 +1,5 @@
 import {User} from "./User";
-import {BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn} from "typeorm";
+import {BaseEntity, Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn} from "typeorm";
 import {Field, Int, ObjectType} from "type-graphql";
 
 
@@ -18,6 +18,6 @@ export class Comment extends BaseEntity {
     @Field( () => User, {nullable: true})
     // @Column( () => User)
     @ManyToOne( () => User, {eager: true} )
-    // @JoinColumn({name: "user_id"})
+    @JoinColumn({name: "user_id"})
     author: User
 }
