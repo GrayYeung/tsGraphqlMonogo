@@ -1,4 +1,4 @@
-import { UserEntity } from "../entity/UserEntity";
+import { UserEntity, UserModel } from "../entity/UserEntity";
 import { User } from "../model/User";
 import { Service } from "typedi";
 
@@ -10,7 +10,13 @@ export class UserService {
       name: userEntity.name,
       avatar: userEntity.avatar,
     });
-
     return user;
+  }
+
+  async findIdAndReturn(userEntity?: User): Promise<User | null> {
+    const user = await UserModel.findOne({ user: userEntity }).lean();
+    if (user != null) {
+      return this.userEntityToUser(user);
+    } else return null;
   }
 }

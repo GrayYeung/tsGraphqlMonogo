@@ -3,19 +3,23 @@ import { ObjectId } from "mongodb";
 import { User } from "./User";
 
 @ObjectType()
-export class Comment {
+export class Book {
   @Field(() => ID)
   readonly _id: ObjectId;
 
   @Field()
-  content: string;
+  name: string;
 
   @Field(() => User, { nullable: true })
   author?: User;
 
-  constructor({ _id, content, author }: Readonly<Comment>) {
+  @Field({ nullable: true })
+  publishDate?: Date;
+
+  constructor({ _id, name, author, publishDate }: Readonly<Book>) {
     this._id = _id;
-    this.content = content;
+    this.name = name;
     this.author = author;
+    this.publishDate = publishDate;
   }
 }

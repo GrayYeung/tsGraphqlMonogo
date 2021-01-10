@@ -8,19 +8,23 @@ import {
 } from "type-graphql";
 import { CommentModel } from "../entity/CommentEntity";
 import { Comment } from "../model/Comment";
-import { UserModel } from "../entity/UserEntity";
 import { CreateCommentInput } from "./input/CommentInput";
 import { User } from "../model/User";
 import { UserService } from "../service/UserService";
+import { CommentService } from "../service/CommentService";
+import { UserModel } from "../entity/UserEntity";
 
 @Resolver(() => Comment)
 export class CommentResolver {
-  constructor(private userService: UserService) {}
+  constructor(
+    private userService: UserService,
+    private commentService: CommentService
+  ) {}
 
   @Query(() => [Comment])
   async comments() {
-    const comment = CommentModel.find();
-    return comment;
+    const comment = await CommentModel.find().lean();
+    return comment.map((it) => this.commentService.commentEntityToComment(it));
   }
 
   @Mutation(() => Comment)
@@ -31,7 +35,7 @@ export class CommentResolver {
     });
     await comment.save();
 
-    return comment;
+    return this.commentService.commentEntityToComment(comment);
   }
 
   @FieldResolver()

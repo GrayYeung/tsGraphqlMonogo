@@ -5,6 +5,7 @@ import { UserResolver } from "./resolvers/UserResolver";
 import { mongoose } from "@typegoose/typegoose";
 import { CommentResolver } from "./resolvers/CommentResolver";
 import { Container } from "typedi";
+import { BookResolver } from "./resolvers/BookResolver";
 
 // replace with your values if needed
 const MONGO_DB_URL =
@@ -21,7 +22,7 @@ async function bootstrap() {
 
     const apolloServer = new ApolloServer({
       schema: await buildSchema({
-        resolvers: [UserResolver, CommentResolver], // TODO
+        resolvers: [UserResolver, CommentResolver, BookResolver], // TODO
         container: Container,
       }),
       context: ({ req, res }) => ({ req, res }),

@@ -8,8 +8,10 @@ import { UserService } from "../service/UserService";
 export class UserResolver {
   constructor(private userService: UserService) {}
 
-  @Query(() => [User])
-  async users(@Arg("name", { nullable: true }) name?: string): Promise<User[]> {
+  @Query(() => [User], { nullable: true })
+  async users(
+    @Arg("name", { nullable: true }) name?: string
+  ): Promise<User[] | null> {
     const users = await UserModel.find({ name }).lean();
     return users.map((it) => this.userService.userEntityToUser(it));
   }
