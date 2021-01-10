@@ -1,33 +1,46 @@
-import {Arg, Int, Mutation, Query, Resolver} from "type-graphql";
-import {Comment} from "../entity/Comment";
-import {User} from "../entity/User";
+import {
+  Arg,
+  FieldResolver,
+  Mutation,
+  Query,
+  Resolver,
+  Root,
+} from "type-graphql";
+import { CommentModel } from "../entity/CommentEntity";
+import { Comment } from "../model/Comment";
+import { UserModel } from "../entity/UserEntity";
+import { CreateCommentInput } from "./input/CommentInput";
+import { User } from "../model/User";
+import { UserService } from "../service/UserService";
 
-
-@Resolver()
+@Resolver(() => Comment)
 export class CommentResolver {
+  constructor(private userService: UserService) {}
 
-    @Query( () => [Comment] )
-    async comments() {
-        const comment = await Comment.find()
-        // const test = comment.map(it => it.author)
-        // console.log(test)
-        return comment
+  @Query(() => [Comment])
+  async comments() {
+    const comment = CommentModel.find();
+    return comment;
+  }
+
+  @Mutation(() => Comment)
+  async createComment(@Arg("input") input: CreateCommentInput) {
+    const comment = new CommentModel({
+      content: input.content,
+      author: input.userId,
+    });
+    await comment.save();
+
+    return comment;
+  }
+
+  @FieldResolver()
+  async author(@Root() comment: Comment): Promise<User | null> {
+    const user = await UserModel.findOne({ user: comment.author });
+    if (user != null) {
+      return this.userService.userEntityToUser(user);
+    } else {
+      return null;
     }
-
-    @Mutation( () => Comment)
-    async createComment(
-        @Arg ("content") content: string,
-        @Arg ("userId", () => Int) userId: number
-    ) {
-        const user = await User.findOne({id: userId})
-
-        const comment = await Comment.create({content, author: user}).save()
-        // const comment = await Comment.create({content}).save()
-
-        return comment
-
-    }
-
-
-
+  }
 }
