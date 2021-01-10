@@ -10,7 +10,7 @@ export class BookService {
     const book = new Book({
       _id: bookEntity._id,
       name: bookEntity.name,
-      //todo author:
+      //author: No need, as it will be destructed by FieldResolver
       publishDate: bookEntity.publishDate,
     });
 

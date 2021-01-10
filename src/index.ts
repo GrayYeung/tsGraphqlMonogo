@@ -22,7 +22,7 @@ async function bootstrap() {
 
     const apolloServer = new ApolloServer({
       schema: await buildSchema({
-        resolvers: [UserResolver, CommentResolver, BookResolver], // TODO
+        resolvers: [UserResolver, CommentResolver, BookResolver],
         container: Container,
       }),
       context: ({ req, res }) => ({ req, res }),
@@ -37,22 +37,3 @@ async function bootstrap() {
 }
 
 bootstrap();
-
-// (async () => {
-//   const app = express();
-//
-//   await createConnection();
-//
-//   const apolloServer = new ApolloServer({
-//     schema: await buildSchema({
-//       resolvers: [UserResolver, CommentResolver] // TODO
-//     }),
-//     context: ({ req, res }) => ({ req, res })
-//   });
-//
-//   apolloServer.applyMiddleware({ app, cors: false });
-//
-//   app.listen(4000, () => {
-//     console.log("express server $port 4000 started");
-//   });
-// })();

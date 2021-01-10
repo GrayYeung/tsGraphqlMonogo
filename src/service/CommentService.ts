@@ -8,7 +8,7 @@ export class CommentService {
     const comment = new Comment({
       _id: commentEntity._id,
       content: commentEntity.content,
-      // author: this.userService.findIdAndReturn2(commentEntity.author),
+      //author: No need, as it will be destructed by FieldResolver
     });
     return comment;
   }

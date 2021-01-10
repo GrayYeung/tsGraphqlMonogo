@@ -11,7 +11,6 @@ export class CommentEntity {
 
   @Property({ required: true, ref: UserEntity })
   author: Ref<UserEntity>;
-  _doc: any; //todo
 }
 
 export const CommentModel = getModelForClass(CommentEntity);
