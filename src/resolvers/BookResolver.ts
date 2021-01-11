@@ -13,12 +13,15 @@ import { CreateBookInput } from "./input/BookInput";
 import { UserModel } from "../entity/UserEntity";
 import { UserService } from "../service/UserService";
 import { Book } from "../model/Book";
+import { Comment } from "../model/Comment";
+import { CommentService } from "../service/CommentService";
+import { CommentModel } from "../entity/CommentEntity";
 
 @Resolver(() => Book)
 export class BookResolver {
   constructor(
     private bookService: BookService,
-    // private commentService: CommentService,
+    private commentService: CommentService,
     private userService: UserService
   ) {}
 
@@ -51,31 +54,10 @@ export class BookResolver {
     }
   }
 
-  // @FieldResolver()
-  // async comments(@Root() book: Book) {
-  //   const commentList: Array<Comment> = await CommentModel.find().lean();
-  //   const commentFilter: Array<Comment> = commentList.filter(
-  //     (it) => it.book == book
-  //   );
-  //
-  //   return commentFilter.map((it) =>
-  //     this.commentService.commentEntityToComment(it)
-  //   );
-  //   //
-  //   // if (commentFilter != null) {
-  //   //   return this.commentService.commentEntityToComment(commentFilter);
-  //   // } else {
-  //   //   return null;
-  //   // }
-  // }
+  @FieldResolver(() => [Comment]!)
+  async comments(@Root() book: Book): Promise<Comment[]> {
+    const comments = await CommentModel.find({ book: book }).lean();
 
-  // @FieldResolver()
-  // async comments(@Root() book: Book): Promise<Comment | null> {
-  //   const comment = await CommentModel.findById(book._id);
-  //   if (comment != null) {
-  //     return this.commentService.commentEntityToComment(comment);
-  //   } else {
-  //     return null;
-  //   }
-  // }
+    return comments.map((it) => this.commentService.commentEntityToComment(it));
+  }
 }

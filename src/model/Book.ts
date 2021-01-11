@@ -1,6 +1,7 @@
 import { Field, ID, ObjectType } from "type-graphql";
 import { ObjectId } from "mongodb";
 import { User } from "./User";
+import { Comment } from "../model/Comment";
 
 @ObjectType()
 export class Book {
@@ -16,8 +17,8 @@ export class Book {
   @Field({ nullable: true })
   publishDate?: Date;
 
-  // @Field(() => [Comment], { nullable: true })
-  // comments: Comment[];
+  @Field(() => [Comment], { nullable: true })
+  comments: Comment[];
 
   constructor({ _id, name, author, publishDate }: Readonly<Book>) {
     this._id = _id;
