@@ -53,7 +53,9 @@ export class BookResolver {
             ],
           },
         },
-      ]);
+      ]).sort({
+        [filterInput.sortingBy as string]: filterInput.sortingOrder as number,
+      });
       console.log("BBBB");
       console.log(book); //
     } else {

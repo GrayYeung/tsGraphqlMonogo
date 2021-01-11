@@ -1,4 +1,6 @@
 import { Field, InputType } from "type-graphql";
+import { SORT_BY } from "../../enum/SortBy";
+import { SORT_ORDER } from "../../enum/SortingOrder";
 
 @InputType()
 export class FilterInput {
@@ -10,4 +12,10 @@ export class FilterInput {
 
   // @Field({ nullable: true })
   // keyword?: string = "";
+
+  @Field(() => SORT_BY, { nullable: true })
+  sortingBy?: SORT_BY = SORT_BY.PublishDate;
+
+  @Field(() => SORT_ORDER, { nullable: true })
+  sortingOrder?: SORT_ORDER = SORT_ORDER.Acs;
 }
