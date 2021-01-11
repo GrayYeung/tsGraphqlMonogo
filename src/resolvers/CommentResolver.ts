@@ -46,20 +46,14 @@ export class CommentResolver {
   @FieldResolver()
   async author(@Root() comment: Comment): Promise<User | null> {
     const user = await UserModel.findById(comment.author);
-    if (user != null) {
-      return this.userService.userEntityToUser(user);
-    } else {
-      return null;
-    }
+
+    return user ? this.userService.userEntityToUser(user) : null;
   }
 
   @FieldResolver()
   async book(@Root() comment: Comment): Promise<Book | null> {
     const book = await BookModel.findById(comment.book);
-    if (book != null) {
-      return this.bookService.bookEntityToBook(book);
-    } else {
-      return null;
-    }
+
+    return book ? this.bookService.bookEntityToBook(book) : null;
   }
 }

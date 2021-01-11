@@ -12,6 +12,8 @@ export class BookService {
       name: bookEntity.name,
       author: bookEntity.author,
       publishDate: bookEntity.publishDate,
+      comments: [],
+      commentCount: 0,
     });
 
     return book;

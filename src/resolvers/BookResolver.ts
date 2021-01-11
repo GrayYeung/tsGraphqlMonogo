@@ -1,6 +1,7 @@
 import {
   Arg,
   FieldResolver,
+  Int,
   Mutation,
   Query,
   Resolver,
@@ -27,7 +28,7 @@ export class BookResolver {
 
   @Query(() => [Book])
   async books() {
-    const book = await BookModel.find().populate("author").lean();
+    const book = await BookModel.find().lean();
 
     return book.map((it) => this.bookService.bookEntityToBook(it));
   }
@@ -47,11 +48,8 @@ export class BookResolver {
   @FieldResolver()
   async author(@Root() book: Book): Promise<User | null> {
     const user = await UserModel.findById(book.author);
-    if (user != null) {
-      return this.userService.userEntityToUser(user);
-    } else {
-      return null;
-    }
+
+    return user ? this.userService.userEntityToUser(user) : null;
   }
 
   @FieldResolver(() => [Comment]!)
@@ -59,5 +57,12 @@ export class BookResolver {
     const comments = await CommentModel.find({ book: book }).lean();
 
     return comments.map((it) => this.commentService.commentEntityToComment(it));
+  }
+
+  @FieldResolver(() => Int)
+  async commentCount(@Root() book: Book) {
+    const count = await CommentModel.countDocuments({ book: book }).lean();
+
+    return count;
   }
 }
