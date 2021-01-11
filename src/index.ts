@@ -10,6 +10,7 @@ import { BookResolver } from "./resolvers/BookResolver";
 // replace with your values if needed
 const MONGO_DB_URL =
   "mongodb+srv://root:Admin@typescriptgraphqlbook.vftt4.mongodb.net/TypeScriptGraphQLBook?retryWrites=true&w=majority";
+//todo(use docker Compose)
 
 async function bootstrap() {
   try {

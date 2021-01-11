@@ -12,8 +12,13 @@ export class UserResolver {
   async users(
     @Arg("name", { nullable: true }) name?: string
   ): Promise<User[] | null> {
-    const users = await UserModel.find({ name }).lean();
-    return users.map((it) => this.userService.userEntityToUser(it));
+    if (name == null) {
+      const users = await UserModel.find().lean();
+      return users.map((it) => this.userService.userEntityToUser(it));
+    } else {
+      const users = await UserModel.find({ name: name }).lean();
+      return users.map((it) => this.userService.userEntityToUser(it));
+    }
   }
 
   @Mutation(() => User)

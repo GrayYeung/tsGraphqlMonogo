@@ -16,10 +16,14 @@ export class Book {
   @Field({ nullable: true })
   publishDate?: Date;
 
+  // @Field(() => [Comment], { nullable: true })
+  // comments: Comment[];
+
   constructor({ _id, name, author, publishDate }: Readonly<Book>) {
     this._id = _id;
     this.name = name;
     this.author = author;
     this.publishDate = publishDate;
+    // this.comments = comments;
   }
 }

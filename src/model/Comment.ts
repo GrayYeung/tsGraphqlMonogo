@@ -1,6 +1,7 @@
 import { Field, ID, ObjectType } from "type-graphql";
 import { ObjectId } from "mongodb";
 import { User } from "./User";
+import { Book } from "./Book";
 
 @ObjectType()
 export class Comment {
@@ -13,9 +14,15 @@ export class Comment {
   @Field(() => User, { nullable: true })
   author?: User;
 
-  constructor({ _id, content, author }: Readonly<Comment>) {
+  @Field(() => Book)
+  book: Book;
+
+  constructor({ _id, content, author, book }: Readonly<Comment>) {
     this._id = _id;
     this.content = content;
     this.author = author;
+    this.book = book;
   }
+
+  //todo (add comment ref to Book)
 }

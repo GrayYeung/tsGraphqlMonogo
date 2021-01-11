@@ -8,4 +8,7 @@ export class CreateCommentInput {
 
   @Field(() => ID)
   userId: ObjectID;
+
+  @Field(() => ID)
+  bookId: ObjectID;
 }

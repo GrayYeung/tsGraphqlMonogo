@@ -13,12 +13,16 @@ import { User } from "../model/User";
 import { UserService } from "../service/UserService";
 import { CommentService } from "../service/CommentService";
 import { UserModel } from "../entity/UserEntity";
+import { Book } from "../model/Book";
+import { BookModel } from "../entity/BookEntity";
+import { BookService } from "../service/BookService";
 
 @Resolver(() => Comment)
 export class CommentResolver {
   constructor(
     private userService: UserService,
-    private commentService: CommentService
+    private commentService: CommentService,
+    private bookService: BookService
   ) {}
 
   @Query(() => [Comment])
@@ -32,6 +36,7 @@ export class CommentResolver {
     const comment = new CommentModel({
       content: input.content,
       author: input.userId,
+      book: input.bookId,
     });
     await comment.save();
 
@@ -40,9 +45,19 @@ export class CommentResolver {
 
   @FieldResolver()
   async author(@Root() comment: Comment): Promise<User | null> {
-    const user = await UserModel.findOne({ user: comment.author });
+    const user = await UserModel.findById(comment.author);
     if (user != null) {
       return this.userService.userEntityToUser(user);
+    } else {
+      return null;
+    }
+  }
+
+  @FieldResolver()
+  async book(@Root() comment: Comment): Promise<Book | null> {
+    const book = await BookModel.findById(comment.book);
+    if (book != null) {
+      return this.bookService.bookEntityToBook(book);
     } else {
       return null;
     }
