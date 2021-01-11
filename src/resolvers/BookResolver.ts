@@ -17,6 +17,7 @@ import { Book } from "../model/Book";
 import { Comment } from "../model/Comment";
 import { CommentService } from "../service/CommentService";
 import { CommentModel } from "../entity/CommentEntity";
+import { FilterInput } from "./input/FilterInput";
 
 @Resolver(() => Book)
 export class BookResolver {
@@ -27,8 +28,40 @@ export class BookResolver {
   ) {}
 
   @Query(() => [Book])
-  async books() {
-    const book = await BookModel.find().lean();
+  async books(
+    @Arg("filterInput", { nullable: true }) filterInput?: FilterInput
+  ) {
+    console.log(filterInput); //
+
+    let book;
+
+    if (filterInput != undefined) {
+      book = await BookModel.aggregate([
+        {
+          $lookup: {
+            from: UserModel.collection.name,
+            localField: "author",
+            foreignField: "_id",
+            as: "author",
+          },
+        },
+        {
+          $match: {
+            $and: [
+              { name: { $regex: filterInput.bookName } },
+              { "author.name": { $regex: filterInput.authorName } },
+            ],
+          },
+        },
+      ]);
+      console.log("BBBB");
+      console.log(book); //
+    } else {
+      book = await BookModel.find().lean();
+    }
+
+    book = book.sort();
+    //todo filter
 
     return book.map((it) => this.bookService.bookEntityToBook(it));
   }

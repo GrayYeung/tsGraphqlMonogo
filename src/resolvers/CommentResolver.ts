@@ -27,7 +27,11 @@ export class CommentResolver {
 
   @Query(() => [Comment])
   async comments() {
-    const comment = await CommentModel.find().lean();
+    const comment = await CommentModel.find()
+      // Alternative of FieldResolver: use populate
+      // .populate("author")
+      // .populate("book")
+      .lean();
     return comment.map((it) => this.commentService.commentEntityToComment(it));
   }
 

@@ -23,6 +23,4 @@ export class Comment {
     this.author = author;
     this.book = book;
   }
-
-  //todo (add comment ref to Book)
 }

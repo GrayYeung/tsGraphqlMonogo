@@ -38,3 +38,6 @@ async function bootstrap() {
 }
 
 bootstrap();
+
+//TODO: added filter and sort query, pagination
+//TODO: dataloader
