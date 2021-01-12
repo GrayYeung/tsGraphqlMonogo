@@ -50,12 +50,19 @@ export class BookResolver {
           ],
         },
       },
-    ])
-      .sort({
-        [filterApplied.sortingBy as string]: filterApplied.sortingOrder as number,
-      })
-      .skip(filterApplied.skip!)
-      .limit(filterApplied.limit!);
+      {
+        $sort: {
+          [filterApplied.sortingBy as string]: filterApplied.sortingOrder as number,
+        },
+      },
+      { $skip: filterApplied.skip },
+      { $limit: filterApplied.limit },
+    ]);
+    // .sort({
+    //   [filterApplied.sortingBy as string]: filterApplied.sortingOrder as number,
+    // });
+    // .skip(filterApplied.skip!)
+    // .limit(filterApplied.limit!);
 
     return book.map((it) => this.bookService.bookEntityToBook(it));
   }
