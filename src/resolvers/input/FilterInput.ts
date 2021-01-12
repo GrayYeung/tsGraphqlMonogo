@@ -1,4 +1,4 @@
-import { Field, InputType } from "type-graphql";
+import { Field, InputType, Int } from "type-graphql";
 import { SORT_BY } from "../../enum/SortBy";
 import { SORT_ORDER } from "../../enum/SortingOrder";
 
@@ -18,4 +18,10 @@ export class FilterInput {
 
   @Field(() => SORT_ORDER, { nullable: true })
   sortingOrder?: SORT_ORDER = SORT_ORDER.Acs;
+
+  @Field(() => Int, { nullable: true })
+  skip?: number = 0;
+
+  @Field(() => Int, { nullable: true })
+  limit?: number = 10;
 }

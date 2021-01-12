@@ -31,12 +31,7 @@ export class BookResolver {
   async books(
     @Arg("filterInput", { nullable: true }) filterInput?: FilterInput
   ) {
-    console.log(filterInput); //
-
     let filterApplied = filterInput ?? new FilterInput();
-
-    console.log("aaa");
-    console.log(filterApplied);
 
     const book = await BookModel.aggregate([
       {
@@ -55,11 +50,12 @@ export class BookResolver {
           ],
         },
       },
-    ]).sort({
-      [filterApplied.sortingBy as string]: filterApplied.sortingOrder as number,
-    });
-    console.log("BBBB");
-    console.log(book); //
+    ])
+      .sort({
+        [filterApplied.sortingBy as string]: filterApplied.sortingOrder as number,
+      })
+      .skip(filterApplied.skip!)
+      .limit(filterApplied.limit!);
 
     return book.map((it) => this.bookService.bookEntityToBook(it));
   }
