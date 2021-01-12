@@ -33,37 +33,33 @@ export class BookResolver {
   ) {
     console.log(filterInput); //
 
-    let book;
+    let filterApplied = filterInput ?? new FilterInput();
 
-    if (filterInput != undefined) {
-      book = await BookModel.aggregate([
-        {
-          $lookup: {
-            from: UserModel.collection.name,
-            localField: "author",
-            foreignField: "_id",
-            as: "author",
-          },
-        },
-        {
-          $match: {
-            $and: [
-              { name: { $regex: filterInput.bookName } },
-              { "author.name": { $regex: filterInput.authorName } },
-            ],
-          },
-        },
-      ]).sort({
-        [filterInput.sortingBy as string]: filterInput.sortingOrder as number,
-      });
-      console.log("BBBB");
-      console.log(book); //
-    } else {
-      book = await BookModel.find().lean();
-    }
+    console.log("aaa");
+    console.log(filterApplied);
 
-    book = book.sort();
-    //todo filter
+    const book = await BookModel.aggregate([
+      {
+        $lookup: {
+          from: UserModel.collection.name,
+          localField: "author",
+          foreignField: "_id",
+          as: "author",
+        },
+      },
+      {
+        $match: {
+          $and: [
+            { name: { $regex: filterApplied.bookName } },
+            { "author.name": { $regex: filterApplied.authorName } },
+          ],
+        },
+      },
+    ]).sort({
+      [filterApplied.sortingBy as string]: filterApplied.sortingOrder as number,
+    });
+    console.log("BBBB");
+    console.log(book); //
 
     return book.map((it) => this.bookService.bookEntityToBook(it));
   }
