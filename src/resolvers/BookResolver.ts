@@ -7,24 +7,23 @@ import {
   Resolver,
   Root,
 } from "type-graphql";
-import { User } from "../model/User";
 import { BookService } from "../service/BookService";
 import { BookModel } from "../entity/BookEntity";
 import { CreateBookInput } from "./input/BookInput";
 import { UserModel } from "../entity/UserEntity";
-import { UserService } from "../service/UserService";
 import { Book } from "../model/Book";
 import { Comment } from "../model/Comment";
 import { CommentService } from "../service/CommentService";
 import { CommentModel } from "../entity/CommentEntity";
 import { FilterInput } from "./input/FilterInput";
+import { UL } from "../loader/UserLoader";
+import { User } from "../model/User";
 
 @Resolver(() => Book)
 export class BookResolver {
   constructor(
     private bookService: BookService,
-    private commentService: CommentService,
-    private userService: UserService
+    private commentService: CommentService // private userService: UserService
   ) {}
 
   @Query(() => [Book])
@@ -80,10 +79,19 @@ export class BookResolver {
   }
 
   @FieldResolver()
-  async author(@Root() book: Book): Promise<User | null> {
-    const user = await UserModel.findById(book.author);
+  async author(@Root() book: Book): Promise<User> {
+    console.log("!!!!!!!!!!!!!!!!!!!!!!!");
+    console.log(book);
+    console.log("@@@@@@@@@@@@@@@@@@@@@@@");
+    console.log(book.author);
+    const user = UL.load(book.author!);
+    console.log("#####################");
+    console.log(user);
+    // const user = await UserModel.findById(book.author);
 
-    return user ? this.userService.userEntityToUser(user) : null;
+    // return user ? this.userService.userEntityToUser(user) : null;
+
+    return user;
   }
 
   @FieldResolver(() => [Comment]!)

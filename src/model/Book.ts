@@ -12,7 +12,7 @@ export class Book {
   name: string;
 
   @Field(() => User, { nullable: true })
-  author?: User;
+  author?: ObjectId;
 
   @Field({ nullable: true })
   publishDate?: Date;
