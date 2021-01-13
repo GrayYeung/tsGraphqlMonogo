@@ -9,18 +9,16 @@ import {
 import { CommentModel } from "../entity/CommentEntity";
 import { Comment } from "../model/Comment";
 import { CreateCommentInput } from "./input/CommentInput";
-import { User } from "../model/User";
-import { UserService } from "../service/UserService";
 import { CommentService } from "../service/CommentService";
-import { UserModel } from "../entity/UserEntity";
 import { Book } from "../model/Book";
 import { BookModel } from "../entity/BookEntity";
 import { BookService } from "../service/BookService";
+import { userLoader } from "../loader/UserLoader";
+import { User } from "../model/User";
 
 @Resolver(() => Comment)
 export class CommentResolver {
   constructor(
-    private userService: UserService,
     private commentService: CommentService,
     private bookService: BookService
   ) {}
@@ -48,10 +46,13 @@ export class CommentResolver {
   }
 
   @FieldResolver()
-  async author(@Root() comment: Comment): Promise<User | null> {
-    const user = await UserModel.findById(comment.author);
+  async author(@Root() comment: Comment): Promise<User> {
+    // Query without DataLoader:
+    // const user = await UserModel.findById(comment.author);
+    // return user ? this.userService.userEntityToUser(user) : null;
+    const users = await userLoader.load(comment.author!);
 
-    return user ? this.userService.userEntityToUser(user) : null;
+    return users.filter((user) => comment.author!.equals(user._id))[0];
   }
 
   @FieldResolver()

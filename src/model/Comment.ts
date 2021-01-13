@@ -12,7 +12,7 @@ export class Comment {
   content: string;
 
   @Field(() => User, { nullable: true })
-  author?: User;
+  author?: ObjectId;
 
   @Field(() => Book)
   book: Book;

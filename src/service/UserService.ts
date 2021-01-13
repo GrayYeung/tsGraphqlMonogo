@@ -13,10 +13,9 @@ export class UserService {
     return user;
   }
 
-  async findIdAndReturn(userEntity?: User): Promise<User | null> {
-    const user = await UserModel.findOne({ user: userEntity }).lean();
-    if (user != null) {
-      return this.userEntityToUser(user);
-    } else return null;
+  async findUserFromModelById(id: string): Promise<User | null> {
+    const user = await UserModel.findById(id);
+
+    return user ? this.userEntityToUser(user) : null;
   }
 }
