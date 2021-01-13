@@ -2,10 +2,10 @@ import "reflect-metadata";
 import { ApolloServer } from "apollo-server";
 import { buildSchema } from "type-graphql";
 import { UserResolver } from "./resolvers/UserResolver";
-import { mongoose } from "@typegoose/typegoose";
 import { CommentResolver } from "./resolvers/CommentResolver";
 import { Container } from "typedi";
 import { BookResolver } from "./resolvers/BookResolver";
+import { mongoose } from "@typegoose/typegoose";
 
 // replace with your values if needed
 const MONGO_DB_URL =
@@ -38,5 +38,3 @@ async function bootstrap() {
 }
 
 bootstrap();
-
-//TODO: dataloader

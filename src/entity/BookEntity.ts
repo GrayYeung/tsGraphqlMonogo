@@ -1,7 +1,10 @@
 import { ObjectId } from "mongodb";
 import { prop as Property } from "@typegoose/typegoose/lib/prop";
 import { UserEntity } from "./UserEntity";
-import { getModelForClass } from "@typegoose/typegoose";
+import { getModelForClass, mongoose } from "@typegoose/typegoose";
+import { User } from "../model/User";
+
+mongoose.set("debug", true);
 
 export class BookEntity {
   _id: ObjectId;
@@ -10,7 +13,7 @@ export class BookEntity {
   name: string;
 
   @Property({ required: false, ref: UserEntity })
-  author: ObjectId;
+  author: User[];
 
   @Property({ default: new Date() })
   publishDate: Date;

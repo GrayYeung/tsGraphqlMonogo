@@ -12,13 +12,13 @@ export class Book {
   name: string;
 
   @Field(() => User, { nullable: true })
-  author?: ObjectId;
+  author?: User[];
 
   @Field({ nullable: true })
   publishDate?: Date;
 
   @Field(() => [Comment], { nullable: true })
-  comments: Comment[];
+  comments: ObjectId[];
 
   @Field(() => Int, { nullable: true })
   commentCount: number;

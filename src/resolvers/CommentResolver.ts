@@ -11,17 +11,15 @@ import { Comment } from "../model/Comment";
 import { CreateCommentInput } from "./input/CommentInput";
 import { CommentService } from "../service/CommentService";
 import { Book } from "../model/Book";
-import { BookModel } from "../entity/BookEntity";
-import { BookService } from "../service/BookService";
-import { userLoader } from "../loader/UserLoader";
 import { User } from "../model/User";
+import { userLoader } from "../loader/UserLoader";
+import { bookLoader } from "../loader/BookLoader";
+import { Service } from "typedi";
 
+@Service()
 @Resolver(() => Comment)
 export class CommentResolver {
-  constructor(
-    private commentService: CommentService,
-    private bookService: BookService
-  ) {}
+  constructor(private commentService: CommentService) {}
 
   @Query(() => [Comment])
   async comments() {
@@ -45,20 +43,26 @@ export class CommentResolver {
     return this.commentService.commentEntityToComment(comment);
   }
 
-  @FieldResolver()
-  async author(@Root() comment: Comment): Promise<User> {
+  @FieldResolver(() => User)
+  async commentator(@Root() comment: Comment): Promise<User> {
     // Query without DataLoader:
     // const user = await UserModel.findById(comment.author);
     // return user ? this.userService.userEntityToUser(user) : null;
-    const users = await userLoader.load(comment.author!);
+    console.log("comment - commentator - comment:");
+    console.log(comment);
 
-    return users.filter((user) => comment.author!.equals(user._id))[0];
+    const users = await userLoader.load(comment.commentator!);
+
+    return users.filter((user) => comment.commentator!.equals(user._id))[0];
   }
 
-  @FieldResolver()
+  @FieldResolver(() => Book)
   async book(@Root() comment: Comment): Promise<Book | null> {
-    const book = await BookModel.findById(comment.book);
+    // const book = await BookModel.findById(comment.book);
+    // return book ? this.bookService.bookEntityToBook(book) : null;
 
-    return book ? this.bookService.bookEntityToBook(book) : null;
+    const books = await bookLoader.load(comment.book);
+
+    return books.filter((book) => comment.book.equals(book._id))[0];
   }
 }

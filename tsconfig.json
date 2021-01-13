@@ -8,7 +8,8 @@
       "es2017",
       "esnext.asynciterable"
     ],
-    "sourceMap": true,
+    "incremental": true,
+    "inlineSourceMap": true,
     "outDir": "./dist",
     "moduleResolution": "node",
     "removeComments": true,
@@ -25,13 +26,13 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "resolveJsonModule": true,
-    "baseUrl": "."
+    // "baseUrl": "."
   },
   "exclude": [
     "node_modules"
   ],
-  "include": [
-    "./src/**/*.tsx",
-    "./src/**/*.ts"
-  ]
+  // "include": [
+  //   "./src/**/*.tsx",
+  //   "./src/**/*.ts"
+  // ]
 }

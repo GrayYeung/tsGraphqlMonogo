@@ -12,15 +12,15 @@ export class Comment {
   content: string;
 
   @Field(() => User, { nullable: true })
-  author?: ObjectId;
+  commentator?: ObjectId;
 
   @Field(() => Book)
-  book: Book;
+  book: ObjectId;
 
-  constructor({ _id, content, author, book }: Readonly<Comment>) {
+  constructor({ _id, content, commentator, book }: Readonly<Comment>) {
     this._id = _id;
     this.content = content;
-    this.author = author;
+    this.commentator = commentator;
     this.book = book;
   }
 }

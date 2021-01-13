@@ -26,6 +26,8 @@
     "typeorm": "0.2.20"
   },
   "scripts": {
-    "start": "nodemon --exec node dist/index.js"
+    "start": "nodemon ./dist/index.js",
+    "compile": "tsc --watch",
+    "dev": "concurrently \"npm run compile\" \"npm run start\""
   }
 }

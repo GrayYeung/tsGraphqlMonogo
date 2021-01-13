@@ -1,6 +1,8 @@
 import { ObjectId } from "mongodb";
 import { prop as Property } from "@typegoose/typegoose/lib/prop";
-import { getModelForClass } from "@typegoose/typegoose";
+import { getModelForClass, mongoose } from "@typegoose/typegoose";
+
+mongoose.set("debug", true);
 
 export class UserEntity {
   _id: ObjectId;
