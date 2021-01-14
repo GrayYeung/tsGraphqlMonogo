@@ -8,40 +8,29 @@ import {
   Root,
 } from "type-graphql";
 import { BookModel } from "../entity/BookEntity";
-import { CommentModel } from "../entity/CommentEntity";
 import { BookService } from "../service/BookService";
 import { FilterInput } from "./input/FilterInput";
 import { CreateBookInput } from "./input/BookInput";
 import { Book } from "../model/Book";
-import { Comment } from "../model/Comment";
-import { commentLoaderForBook } from "../loader/CommentLoaderForBook";
-import { UserModel } from "../entity/UserEntity";
 import { User } from "../model/User";
-import { Service } from "typedi";
+import { Comment } from "../model/Comment";
+import { UserModel } from "../entity/UserEntity";
+import { commentLoaderForBook } from "../loader/CommentLoaderForBook";
 
-@Service()
 @Resolver(() => Book)
 export class BookResolver {
-  constructor(
-    private bookService: BookService // , // private userService: UserService
-  ) {}
+  constructor(private bookService: BookService) {}
 
   @Query(() => [Book])
   async books(
     @Arg("filterInput", { nullable: true }) filterInput?: FilterInput
-  ) {
+  ): Promise<Book[]> {
     let filterApplied = filterInput ?? new FilterInput();
+    console.log(filterApplied);
 
-    // const userIds = await findUserIdsBy({[filterApplied.keyword], [filterApplied.authorName] });
-    // const bookConds = [
-    //   userIds.length ? { authorId: { $in: userIds } } : null,
-    //   ...regexsBuilder("name", { keyword, bookName }),
-    // ].filter(notNullorUndefined);
-
-    // const book = await BookModel.find()
-    //   .populate("author")
-    //   .limit(filterApplied.limit!);
-    // .lean();
+    // const book = await BookModel.find();
+    // .populate("author")
+    // .limit(filterApplied.limit!);
 
     const book = await BookModel.aggregate([
       {
@@ -75,7 +64,10 @@ export class BookResolver {
     // .skip(filterApplied.skip!)
     // .limit(filterApplied.limit!);
 
-    return book.map((it) => this.bookService.bookEntityToBook(it));
+    const result = book.map((it) => this.bookService.bookEntityToBook(it));
+    console.log("Book - books - result:");
+    console.log(result);
+    return result;
   }
 
   @Mutation(() => Book)
@@ -114,7 +106,7 @@ export class BookResolver {
     return book.author![0];
   }
 
-  @FieldResolver(() => [Comment]!)
+  @FieldResolver(() => [Comment])
   async comments(@Root() book: Book): Promise<Comment[]> {
     // Query without DataLoader:
     // const comments = await CommentModel.find({ _id: book._id }).lean();
@@ -123,37 +115,42 @@ export class BookResolver {
     console.log("Book - comments - book:");
     console.log(book);
     console.log(book._id);
-    const comments = await commentLoaderForBook.load(book._id);
+    const comments: Comment[] = await commentLoaderForBook.load(book._id);
     console.log("Book - comments - comments:");
     console.log(comments);
 
-    return comments.filter((comment) => book._id.equals(comment.book));
+    return comments;
   }
 
   // @FieldResolver(() => User)
-  // async commentator(@Root() comment: Comment): Promise<User | null> {
+  // async commentator(@Root() commentArray: Comment[]): Promise<User | null> {
   //   // Query without DataLoader:
   //   // const user = await UserModel.findById(book.author);
   //   // return user ? this.userService.userEntityToUser(user) : null;
-  //   console.log("commentator -- comment : ");
-  //   console.log(comment);
+  //   console.log("Book - commentator - commentArray : ");
+  //   console.log(commentArray);
   //
-  //   const userId = comment.commentator;
-  //   console.log("commentator -- userId : ");
-  //   console.log(userId);
+  //   // const userId = comment.commentator;
+  //   // console.log("Book - commentator - userId : ");
+  //   // console.log(userId);
+  //   //
+  //   // const users = await userLoader.load(userId!);
+  //   //
+  //   // return users.filter((user) => userId!.equals(user._id))[0];
   //
-  //   const users = await userLoader.load(userId!);
+  //   const dummy = UserModel.findById("5ffb1bb3950e747fb1213651");
   //
-  //   return users.filter((user) => userId!.equals(user._id))[0];
+  //   return dummy;
   // }
 
   @FieldResolver(() => Int)
   async commentCount(@Root() book: Book) {
     // Query without DataLoader:
-    const count = await CommentModel.countDocuments({ _id: book._id }).lean();
-    // console.log(count);
-    return count;
+    // const count = await CommentModel.countDocuments({ _id: book._id }).lean();
+    // return count;
 
-    // const count = await commentLoader.load(book._id);
+    const comments: Comment[] = await commentLoaderForBook.load(book._id);
+
+    return comments.length;
   }
 }

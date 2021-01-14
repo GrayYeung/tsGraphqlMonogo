@@ -13,7 +13,7 @@ export class CommentEntity {
   content: string;
 
   @Property({ required: true, ref: UserEntity })
-  author: ObjectId;
+  commentator: ObjectId;
 
   @Property({ required: true, ref: BookEntity })
   book: ObjectId;

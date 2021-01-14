@@ -8,7 +8,7 @@ export class CommentService {
     const comment = new Comment({
       _id: commentEntity._id,
       content: commentEntity.content,
-      commentator: commentEntity.author,
+      commentator: commentEntity.commentator,
       book: commentEntity.book,
     });
     return comment;

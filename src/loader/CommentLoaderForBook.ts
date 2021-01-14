@@ -5,6 +5,9 @@ import { Comment } from "../model/Comment";
 
 const commentLoaderForBook = new DataLoader(
   async (bookIds: readonly ObjectId[]) => {
+    console.log("CommentLoader - booksIDs:");
+    console.log(bookIds);
+
     const comments: Comment[] = await CommentModel.find({
       book: { $in: bookIds as ObjectId[] },
     });

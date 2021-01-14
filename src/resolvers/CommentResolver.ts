@@ -11,23 +11,24 @@ import { Comment } from "../model/Comment";
 import { CreateCommentInput } from "./input/CommentInput";
 import { CommentService } from "../service/CommentService";
 import { Book } from "../model/Book";
+import { bookLoader } from "../loader/BookLoader";
 import { User } from "../model/User";
 import { userLoader } from "../loader/UserLoader";
-import { bookLoader } from "../loader/BookLoader";
-import { Service } from "typedi";
 
-@Service()
 @Resolver(() => Comment)
 export class CommentResolver {
   constructor(private commentService: CommentService) {}
 
   @Query(() => [Comment])
-  async comments() {
+  async comments(): Promise<Comment[]> {
     const comment = await CommentModel.find()
       // Alternative of FieldResolver: use populate
       // .populate("author")
       // .populate("book")
       .lean();
+
+    console.log("Comment - comments - comment: ");
+    console.log(comment);
     return comment.map((it) => this.commentService.commentEntityToComment(it));
   }
 
@@ -44,16 +45,20 @@ export class CommentResolver {
   }
 
   @FieldResolver(() => User)
-  async commentator(@Root() comment: Comment): Promise<User> {
+  async commentator(@Root() commentArray: Comment[]): Promise<User | null> {
     // Query without DataLoader:
     // const user = await UserModel.findById(comment.author);
     // return user ? this.userService.userEntityToUser(user) : null;
-    console.log("comment - commentator - comment:");
-    console.log(comment);
+    console.log("Comment - commentator - commentArray:");
+    console.log(commentArray);
+    console.log("Comment - commentator - commentArray - commentator:");
+    console.log(commentArray.commentator);
 
-    const users = await userLoader.load(comment.commentator!);
+    const users = await userLoader.load(commentArray.commentator!);
 
-    return users.filter((user) => comment.commentator!.equals(user._id))[0];
+    return users.filter((user) =>
+      commentArray.commentator!!.equals(user._id)
+    )[0];
   }
 
   @FieldResolver(() => Book)

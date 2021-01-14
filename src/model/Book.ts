@@ -18,7 +18,7 @@ export class Book {
   publishDate?: Date;
 
   @Field(() => [Comment], { nullable: true })
-  comments: ObjectId[];
+  comments: Comment[];
 
   @Field(() => Int, { nullable: true })
   commentCount: number;
