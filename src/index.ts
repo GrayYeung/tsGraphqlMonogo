@@ -6,6 +6,7 @@ import { CommentResolver } from "./resolvers/CommentResolver";
 import { Container } from "typedi";
 import { BookResolver } from "./resolvers/BookResolver";
 import { mongoose } from "@typegoose/typegoose";
+import { AccountResolver } from "./resolvers/AccountResolver";
 
 // replace with your values if needed
 const MONGO_DB_URL =
@@ -23,9 +24,18 @@ async function bootstrap() {
 
     const apolloServer = new ApolloServer({
       schema: await buildSchema({
-        resolvers: [UserResolver, CommentResolver, BookResolver],
+        resolvers: [
+          UserResolver,
+          CommentResolver,
+          BookResolver,
+          AccountResolver,
+        ],
         container: Container,
       }),
+      subscriptions: {
+        path: "/subbbbb",
+        onConnect: () => console.log("Connected to websocket"),
+      },
       context: ({ req, res }) => ({ req, res }),
     });
 

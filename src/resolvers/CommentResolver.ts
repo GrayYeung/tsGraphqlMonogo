@@ -49,14 +49,12 @@ export class CommentResolver {
     // Query without DataLoader:
     // const user = await UserModel.findById(comment.author);
     // return user ? this.userService.userEntityToUser(user) : null;
-    console.log("Comment - commentator - commentArray:");
-    console.log(commentArray);
-    console.log("Comment - commentator - commentArray - commentator:");
-    console.log(commentArray.commentator);
 
+    // @ts-ignore
     const users = await userLoader.load(commentArray.commentator!);
 
     return users.filter((user) =>
+      // @ts-ignore
       commentArray.commentator!!.equals(user._id)
     )[0];
   }
