@@ -23,19 +23,7 @@ export class Book {
   @Field(() => Int, { nullable: true })
   commentCount: number;
 
-  constructor({
-    _id,
-    name,
-    author,
-    publishDate,
-    comments,
-    commentCount,
-  }: Readonly<Book>) {
-    this._id = _id;
-    this.name = name;
-    this.author = author;
-    this.publishDate = publishDate;
-    this.comments = comments;
-    this.commentCount = commentCount;
+  constructor(convertible: Readonly<Book>) {
+    Object.assign(this, convertible);
   }
 }
